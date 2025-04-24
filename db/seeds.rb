@@ -1,9 +1,80 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# db/seeds.rb
+
+puts "📦 Suppression de toutes les données existantes..."
+
+# Supprimer toutes les données des tables concernées
+Anounce.destroy_all if defined?(Anounce)
+Category.destroy_all if defined?(Category)
+City.destroy_all if defined?(City)
+
+puts "✅ Données supprimées."
+
+# Création de catégories
+puts "📁 Création des catégories..."
+
+categories = [
+  "Véhicules",
+  "Immobilier",
+  "Emploi",
+  "Multimédia",
+  "Maison & Jardin",
+  "Loisirs",
+  "Mode & Beauté",
+  "Services",
+  "Animaux",
+  "Autres"
+]
+
+categories.each do |name|
+  Category.create!(name: name)
+end
+
+puts "✅ Catégories créées."
+
+# Création des villes marocaines
+puts "🏙️ Création des villes marocaines..."
+
+cities = [
+  "Casablanca",
+  "Rabat",
+  "Fès",
+  "Marrakech",
+  "Tanger",
+  "Agadir",
+  "Meknès",
+  "Oujda",
+  "El Jadida",
+  "Tétouan",
+  "Safi",
+  "Khouribga",
+  "Béni Mellal",
+  "Nador",
+  "Taza",
+  "Mohammedia",
+  "Kénitra",
+  "Settat",
+  "Berrechid",
+  "Ksar El Kebir",
+  "Larache",
+  "Guelmim",
+  "Errachidia",
+  "Ouarzazate",
+  "Dakhla",
+  "Laâyoune",
+  "Taroudant",
+  "Essaouira",
+  "Al Hoceima",
+  "Ifrane",
+  "Azrou",
+  "Taourirt",
+  "Midelt",
+  "Zagora"
+]
+
+cities.each do |name|
+  City.create!(name: name)
+end
+
+puts "✅ Villes marocaines ajoutées avec succès."
+
+puts "🌱 Seed terminé avec succès !"

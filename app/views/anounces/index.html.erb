@@ -1,2 +1,69 @@
-<h1>Anounces#index</h1>
-<p>Find me in app/views/anounces/index.html.erb</p>
+<div class="anounces-container">
+  <div class="search-section">
+    <div class="container">
+      <h1 class="text-center mb-4">Find what you're looking for</h1>
+      
+      <%= form_with url: anounces_path, method: :get, class: "search-form" do |f| %>
+        <div class="search-bar">
+          <div class="search-input">
+            <%= f.text_field :search, placeholder: "What are you looking for?", class: "form-control" %>
+          </div>
+          
+          <div class="search-filters">
+            <%= f.select :category_id, Category.all.collect { |c| [c.name, c.id] }, { include_blank: "All Categories" }, class: "form-select" %>
+            <%= f.select :city_id, City.all.collect { |c| [c.name, c.id] }, { include_blank: "All Cities" }, class: "form-select" %>
+          </div>
+          
+          <div class="price-range">
+            <%= f.number_field :min_price, placeholder: "Min Price", class: "form-control" %>
+            <%= f.number_field :max_price, placeholder: "Max Price", class: "form-control" %>
+          </div>
+          
+          <%= f.submit "Search", class: "btn btn-primary search-btn" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Latest Announcements</h2>
+     
+    </div>
+    
+    <% if @anounces.any? %>
+      <div class="anounces-grid">
+        <% @anounces.each do |anounce| %>
+          <div class="anounce-card">
+            <%= link_to anounce_path(anounce), class: "anounce-link" do %>
+              <div class="anounce-image">
+                <% if anounce.images.attached? %>
+                  <%= image_tag anounce.images.first, class: "img-fluid" %>
+                <% else %>
+                  <div class="no-image">No Image</div>
+                <% end %>
+              </div>
+              <div class="anounce-details">
+                <h3 class="anounce-title"><%= anounce.title %></h3>
+                <p class="anounce-price"><%= number_to_currency(anounce.price) %></p>
+                <div class="anounce-meta">
+                  <span class="anounce-location"><%= anounce.city.name if anounce.city %></span>
+                  <span class="anounce-date"><%= time_ago_in_words(anounce.created_at) %> ago</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="no-anounces">
+        <div class="empty-state">
+          <i class="fa fa-search fa-4x"></i>
+          <h3>No announcements found</h3>
+          <p>Be the first to post an announcement!</p>
+          <%= link_to "Post an Announcement", new_anounce_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

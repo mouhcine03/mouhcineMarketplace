@@ -7,7 +7,8 @@
     <%= csp_meta_tag %>
     
     <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload" %>
-    <%= javascript_include_tag "application", "data-turbolinks-track": "reload" %>
+    <%= javascript_importmap_tags %>
+   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   </head>
   <body>
@@ -20,16 +21,7 @@
             <% end %>
           </div>
           
-          <div class="search-bar">
-            <%= form_with url: "#", method: :get, local: true, class: "search-form" do |f| %>
-              <div class="search-input-container">
-                <%= f.text_field :q, placeholder: "Que recherchez-vous ?", class: "search-input" %>
-                <button type="submit" class="search-button">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            <% end %>
-          </div>
+          
           
           <div class="user-actions">
             <% if user_signed_in? %>
@@ -42,14 +34,14 @@
                   <%= link_to "Mon profil", "#", class: "dropdown-item" %>
                   <%= link_to "Mes annonces", "#", class: "dropdown-item" %>
                   <%= link_to "Messages", "#", class: "dropdown-item" %>
-                  <%= link_to "Déconnexion", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+                  <%= link_to "Déconnexion", destroy_user_session_path, method: :delete , class: "dropdown-item" %>
                 </div>
               </div>
             <% else %>
               <%= link_to "Se connecter", new_user_session_path, class: "login-btn" %>
               <%= link_to "S'inscrire", new_user_registration_path, class: "signup-btn" %>
             <% end %>
-            <%= link_to "#", class: "post-ad-btn" do %>
+            <%= link_to new_anounce_path , class: "post-ad-btn" do %>
               <i class="fas fa-plus-circle"></i> Déposer une annonce
             <% end %>
           </div>

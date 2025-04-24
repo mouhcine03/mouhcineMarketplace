@@ -1,0 +1,90 @@
+<div class="anounce-form">
+  <%= form_with(model: anounce, local: true, html: { class: "needs-validation", multipart: true }) do |form| %>
+    <% if anounce.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(anounce.errors.count, "error") %> prohibited this announcement from being saved:</h4>
+        <ul>
+          <% anounce.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-section">
+      <h3>Basic Information</h3>
+      
+      <div class="form-group">
+        <%= form.label :title, "Title" %>
+        <%= form.text_field :title, class: "form-control", placeholder: "Enter a descriptive title", required: true %>
+        <small class="form-text text-muted">Be clear and specific about what you're offering</small>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :description, "Description" %>
+        <%= form.text_area :description, class: "form-control", rows: 5, placeholder: "Describe your item in detail", required: true %>
+        <small class="form-text text-muted">Include condition, features, and any other relevant details</small>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :price, "Price" %>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">$</span>
+          </div>
+          <%= form.number_field :price, class: "form-control", min: 0, step: 0.01, required: true %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Category & Location</h3>
+      
+      <div class="form-group">
+        <%= form.label :category_id, "Category" %>
+        <%= form.collection_select :category_id, Category.all, :id, :name, { prompt: "Select a category" }, { class: "form-control", required: true } %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :city_id, "City" %>
+        <%= form.collection_select :city_id, City.all, :id, :name, { prompt: "Select a city" }, { class: "form-control", required: true } %>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Images</h3>
+      <p>Add up to 10 images to showcase your item</p>
+      
+      <div class="form-group">
+        <div class="custom-file-upload">
+          <%= form.file_field :images, multiple: true, direct_upload: true, class: "form-control-file", accept: "image/*" %>
+          <div class="upload-instructions">
+            <i class="fa fa-cloud-upload fa-2x"></i>
+            <p>Drag and drop images here or click to browse</p>
+            <small>Maximum 10 images, 5MB each</small>
+          </div>
+        </div>
+      </div>
+      
+      <% if anounce.images.attached? %>
+        <div class="current-images">
+          <h4>Current Images</h4>
+          <div class="image-preview-container">
+            <% anounce.images.each do |image| %>
+              <div class="image-preview">
+                <%= image_tag image, class: "img-thumbnail" %>
+                <div class="image-actions">
+                  <%= link_to "Remove", nil, class: "btn btn-sm btn-danger remove-image", data: { image_id: image.id } %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit anounce.new_record? ? "Create Announcement" : "Update Announcement", class: "btn btn-primary btn-lg" %>
+    </div>
+  <% end %>
+</div>

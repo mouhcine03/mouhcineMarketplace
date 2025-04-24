@@ -1,2 +1,115 @@
-<h1>Anounces#show</h1>
-<p>Find me in app/views/anounces/show.html.erb</p>
+<div class="anounce-show-container">
+  <div class="container">
+    <div class="breadcrumb-nav">
+      <%= link_to "Home", root_path %> > 
+      <%= link_to @anounce.category.name, anounces_path(category_id: @anounce.category_id) %> > 
+      <%= @anounce.title %>
+    </div>
+    
+    <div class="anounce-details-container">
+      <div class="anounce-gallery">
+        <% if @anounce.images.attached? %>
+          <div class="main-image">
+            <%= image_tag @anounce.images.first, class: "img-fluid" %>
+          </div>
+          
+          <% if @anounce.images.count > 1 %>
+            <div class="thumbnail-gallery">
+              <% @anounce.images.each do |image| %>
+                <div class="thumbnail">
+                  <%= image_tag image, class: "img-fluid" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="no-image">
+            <p>No images available</p>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="anounce-info">
+        <h1 class="anounce-title"><%= @anounce.title %></h1>
+        <div class="anounce-price"><%= number_to_currency(@anounce.price) %></div>
+        
+        <div class="anounce-meta">
+          <div class="meta-item">
+            <i class="fa fa-map-marker"></i>
+            <span><%= @anounce.city.name if @anounce.city %></span>
+          </div>
+          <div class="meta-item">
+            <i class="fa fa-calendar"></i>
+            <span>Posted <%= time_ago_in_words(@anounce.created_at) %> ago</span>
+          </div>
+          <div class="meta-item">
+            <i class="fa fa-tag"></i>
+            <span><%= @anounce.category.name if @anounce.category %></span>
+          </div>
+        </div>
+        
+        <div class="anounce-description">
+          <h3>Description</h3>
+          <p><%= @anounce.description %></p>
+        </div>
+        
+        <div class="seller-info">
+          <h3>Seller Information</h3>
+          <div class="seller-details">
+            <div class="seller-avatar">
+              <i class="fa fa-user-circle fa-3x"></i>
+            </div>
+            <div class="seller-name">
+              <%= @anounce.user.name if @anounce.user %>
+              <div class="member-since">Member since <%= @anounce.user.created_at.strftime("%B %Y") if @anounce.user %></div>
+            </div>
+          </div>
+          <div class="contact-seller">
+            <button class="btn btn-primary btn-block">
+              <i class="fa fa-phone"></i> Show Phone Number
+            </button>
+            <button class="btn btn-outline-primary btn-block">
+              <i class="fa fa-envelope"></i> Message Seller
+            </button>
+          </div>
+        </div>
+        
+        <% if current_user && current_user.id == @anounce.user_id %>
+          <div class="owner-actions">
+            <%= link_to "Edit", edit_anounce_path(@anounce), class: "btn btn-secondary" %>
+            <%= button_to "Delete", anounce_path(@anounce), method: :delete, data: { confirm: "Are you sure you want to delete this announcement?" }, class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <% if @related_anounces.any? %>
+      <div class="related-anounces">
+        <h3>Similar Announcements</h3>
+        <div class="related-anounces-grid">
+          <% @related_anounces.each do |anounce| %>
+            <div class="anounce-card">
+              <%= link_to anounce_path(anounce), class: "anounce-link" do %>
+                <div class="anounce-image">
+                  <% if anounce.images.attached? %>
+                    <%= image_tag anounce.images.first, class: "img-fluid" %>
+                  <% else %>
+                    <div class="no-image">No Image</div>
+                  <% end %>
+                </div>
+                <div class="anounce-details">
+                  <h3 class="anounce-title"><%= anounce.title %></h3>
+                  <p class="anounce-price"><%= number_to_currency(anounce.price) %></p>
+                  <div class="anounce-meta">
+                    <span class="anounce-location"><%= anounce.city.name if anounce.city %></span>
+                    <span class="anounce-date"><%= time_ago_in_words(anounce.created_at) %> ago</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
