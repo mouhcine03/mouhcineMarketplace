@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for?(:title) ? yield(:title) : "Votre Marketplace" %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbolinks-track": "reload" %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="container">
+        <div class="header-top">
+          <div class="logo">
+            <%= link_to root_path do %>
+              <h1>Votre<span>Marketplace</span></h1>
+            <% end %>
+          </div>
+          
+          <div class="search-bar">
+            <%= form_with url: "#", method: :get, local: true, class: "search-form" do |f| %>
+              <div class="search-input-container">
+                <%= f.text_field :q, placeholder: "Que recherchez-vous ?", class: "search-input" %>
+                <button type="submit" class="search-button">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="user-actions">
+            <% if user_signed_in? %>
+              <div class="user-menu">
+                <a href="#" class="user-menu-toggle">
+                  <i class="fas fa-user-circle"></i>
+                  <span>Mon compte</span>
+                </a>
+                <div class="dropdown-menu">
+                  <%= link_to "Mon profil", "#", class: "dropdown-item" %>
+                  <%= link_to "Mes annonces", "#", class: "dropdown-item" %>
+                  <%= link_to "Messages", "#", class: "dropdown-item" %>
+                  <%= link_to "Déconnexion", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+                </div>
+              </div>
+            <% else %>
+              <%= link_to "Se connecter", new_user_session_path, class: "login-btn" %>
+              <%= link_to "S'inscrire", new_user_registration_path, class: "signup-btn" %>
+            <% end %>
+            <%= link_to "#", class: "post-ad-btn" do %>
+              <i class="fas fa-plus-circle"></i> Déposer une annonce
+            <% end %>
+          </div>
+        </div>
+        
+        <nav class="main-nav">
+          <ul class="category-menu">
+            <li><a href="#"><i class="fas fa-car"></i> Véhicules</a></li>
+            <li><a href="#"><i class="fas fa-home"></i> Immobilier</a></li>
+            <li><a href="#"><i class="fas fa-briefcase"></i> Emploi</a></li>
+            <li><a href="#"><i class="fas fa-couch"></i> Meubles</a></li>
+            <li><a href="#"><i class="fas fa-mobile-alt"></i> Téléphones</a></li>
+            <li><a href="#"><i class="fas fa-laptop"></i> Informatique</a></li>
+            <li><a href="#"><i class="fas fa-tshirt"></i> Mode</a></li>
+            <li><a href="#"><i class="fas fa-ellipsis-h"></i> Autres</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="container">
+        <% if notice %>
+          <div class="alert alert-info"><%= notice %></div>
+        <% end %>
+        <% if alert %>
+          <div class="alert alert-danger"><%= alert %></div>
+        <% end %>
+        
+        <%= yield %>
+      </div>
+    </main>
+
+    <footer class="main-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>À propos</h3>
+            <ul>
+              <li><a href="#">Qui sommes-nous</a></li>
+              <li><a href="#">Conditions d'utilisation</a></li>
+              <li><a href="#">Politique de confidentialité</a></li>
+              <li><a href="#">Nous contacter</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-section">
+            <h3>Liens utiles</h3>
+            <ul>
+              <li><a href="#">Aide & Support</a></li>
+              <li><a href="#">Conseils de sécurité</a></li>
+              <li><a href="#">Plan du site</a></li>
+              <li><a href="#">Blog</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-section">
+            <h3>Catégories populaires</h3>
+            <ul>
+              <li><a href="#">Appartements</a></li>
+              <li><a href="#">Voitures</a></li>
+              <li><a href="#">Téléphones</a></li>
+              <li><a href="#">Emplois</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-section">
+            <h3>Suivez-nous</h3>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="app-download">
+              <h4>Téléchargez notre application</h4>
+              <div class="app-buttons">
+                <a href="#" class="app-btn">
+                  <i class="fab fa-google-play"></i> Google Play
+                </a>
+                <a href="#" class="app-btn">
+                  <i class="fab fa-apple"></i> App Store
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="footer-bottom">
+          <p>&copy; <%= Date.today.year %> VotreMarketplace. Tous droits réservés.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
