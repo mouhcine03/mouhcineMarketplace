@@ -10,8 +10,8 @@
           </div>
           
           <div class="search-filters">
-            <%= f.select :category_id, Category.all.collect { |c| [c.name, c.id] }, { include_blank: "All Categories" }, class: "form-select" %>
-            <%= f.select :city_id, City.all.collect { |c| [c.name, c.id] }, { include_blank: "All Cities" }, class: "form-select" %>
+            <%= f.select :category_id, Category.all.collect { |c| [c.name, c.id] }, { include_blank: "All Categories" } %>
+            <%= f.select :city_id, City.all.collect { |c| [c.name, c.id] }, { include_blank: "All Cities" }  %>
           </div>
           
           <div class="price-range">
