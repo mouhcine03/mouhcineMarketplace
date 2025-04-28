@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'profiles/show'
   get 'anounces/index'
   get 'anounces/show'
   get 'anounces/new'
@@ -6,11 +7,18 @@ Rails.application.routes.draw do
   get 'anounces/edit'
   get 'anounces/update'
   get 'anounces/destroy'
+   get 'mes-anounces', to: 'anounces#mes_anounces', as: 'mes_anounces'
+
   devise_for :users
 
   resources :anounces
   resources :cities
   resources :categories
+
+ 
+ get 'profile', to: 'profiles#show'
+ get 'profile/edit', to: 'profiles#edit', as: 'edit_profile'
+ patch 'profile', to: 'profiles#update'
 
   root "anounces#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

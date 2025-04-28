@@ -1,0 +1,110 @@
+<div class="profile-container">
+  <% if flash[:notice] %>
+    <div class="flash flash-success">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+  
+  <% if flash[:alert] %>
+    <div class="flash flash-error">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  
+  <div class="profile-card">
+    <div class="profile-header">
+      <h1 class="profile-title">Mes Annonces</h1>
+      <p class="profile-subtitle">Gérez vos annonces sur la marketplace</p>
+    </div>
+    
+    <div class="anounces-actions">
+      <%= link_to "Nouvelle Annonce", new_anounce_path, class: "btn btn-primary" %>
+      <%= link_to "Retour au Profil", profile_path, class: "btn btn-outline" %>
+    </div>
+    
+    <div class="anounces-list">
+      <% if @anounces.any? %>
+        <% @anounces.each do |anounce| %>
+          <div class="anounce-item">
+            <div class="anounce-header">
+              <h3 class="anounce-title"><%= anounce.title %></h3>
+              <% if anounce.respond_to?(:status) %>
+                <span class="anounce-badge <%= anounce_status_badge_class(anounce.status) %>">
+                  <%= anounce.status.capitalize %>
+                </span>
+              <% end %>
+            </div>
+            
+            <!-- Affichage des photos -->
+            <div class="anounce-photos">
+              <% if anounce.respond_to?(:photos) && anounce.photos.attached? %>
+                <div class="photos-grid">
+                  <% anounce.photos.each do |photo| %>
+                    <div class="photo-item">
+                      <%= image_tag photo.variant(resize_to_limit: [200, 200]), class: "anounce-photo" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% elsif anounce.respond_to?(:photo) && anounce.photo.attached? %>
+                <div class="photo-single">
+                  <%= image_tag anounce.photo.variant(resize_to_limit: [400, 300]), class: "anounce-photo" %>
+                </div>
+              <% elsif anounce.respond_to?(:images) && anounce.images.attached? %>
+                <div class="photos-grid">
+                  <% anounce.images.each do |image| %>
+                    <div class="photo-item">
+                      <%= image_tag image.variant(resize_to_limit: [200, 200]), class: "anounce-photo" %>
+                    </div>
+                  <% end %>
+                </div>
+              <% elsif anounce.respond_to?(:image) && anounce.image.attached? %>
+                <div class="photo-single">
+                  <%= image_tag anounce.image.variant(resize_to_limit: [400, 300]), class: "anounce-photo" %>
+                </div>
+              <% else %>
+                <div class="no-photo">
+                  <div class="no-photo-icon">📷</div>
+                  <span class="no-photo-text">Pas de photo</span>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="anounce-details">
+              <% if anounce.respond_to?(:price) %>
+                <div class="anounce-price"><%= number_to_currency(anounce.price) %></div>
+              <% end %>
+              
+              <% if anounce.respond_to?(:category) %>
+                <div class="anounce-category"><%= anounce.category.name %></div>
+              <% end %>
+              
+              <div class="anounce-date">Créée le <%= anounce.created_at.strftime("%d/%m/%Y") %></div>
+            </div>
+            
+            <% if anounce.respond_to?(:description) %>
+              <div class="anounce-description">
+                <%= truncate(anounce.description, length: 150) %>
+              </div>
+            <% end %>
+            
+            <div class="anounce-actions">
+              <%= link_to "Voir", anounce_path(anounce), class: "btn btn-outline btn-sm" %>
+              <%= link_to "Modifier", edit_anounce_path(anounce), class: "btn btn-secondary btn-sm" %>
+              <%= link_to "Supprimer", anounce_path(anounce), 
+                  method: :delete, 
+                  data: { confirm: "Êtes-vous sûr de vouloir supprimer cette annonce?" }, 
+                  class: "btn btn-danger btn-sm" %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="empty-state">
+          <div class="empty-state-icon">📦</div>
+          <h3>Vous n'avez pas encore d'annonces</h3>
+          <p>Commencez à vendre en créant votre première annonce</p>
+          <%= link_to "Créer une annonce", new_anounce_path, class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
