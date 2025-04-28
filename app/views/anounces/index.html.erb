@@ -6,17 +6,17 @@
       <%= form_with url: anounces_path, method: :get, class: "search-form" do |f| %>
         <div class="search-bar">
           <div class="search-input">
-            <%= f.text_field :search, placeholder: "What are you looking for?", class: "form-control" %>
+            <%= f.text_field :search, placeholder: "What are you looking for?", class: "form-control", value: params[:search] %>
           </div>
           
           <div class="search-filters">
-            <%= f.select :category_id, Category.all.collect { |c| [c.name, c.id] }, { include_blank: "All Categories" } %>
-            <%= f.select :city_id, City.all.collect { |c| [c.name, c.id] }, { include_blank: "All Cities" }  %>
+            <%= f.select :category_id, Category.all.collect { |c| [c.name, c.id] }, { include_blank: "All Categories" }, { selected: params[:category_id] } %>
+            <%= f.select :city_id, City.all.collect { |c| [c.name, c.id] }, { include_blank: "All Cities" }, { selected: params[:city_id] } %>
           </div>
           
           <div class="price-range">
-            <%= f.number_field :min_price, placeholder: "Min Price", class: "form-control" %>
-            <%= f.number_field :max_price, placeholder: "Max Price", class: "form-control" %>
+            <%= f.number_field :min_price, placeholder: "Min Price", class: "form-control", value: params[:min_price] %>
+            <%= f.number_field :max_price, placeholder: "Max Price", class: "form-control", value: params[:max_price] %>
           </div>
           
           <%= f.submit "Search", class: "btn btn-primary search-btn" %>
@@ -26,44 +26,154 @@
   </div>
 
   <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2>Latest Announcements</h2>
-     
-    </div>
-    
-    <% if @anounces.any? %>
-      <div class="anounces-grid">
-        <% @anounces.each do |anounce| %>
-          <div class="anounce-card">
-            <%= link_to anounce_path(anounce), class: "anounce-link" do %>
-              <div class="anounce-image">
-                <% if anounce.images.attached? %>
-                  <%= image_tag anounce.images.first, class: "img-fluid" %>
-                <% else %>
-                  <div class="no-image">No Image</div>
-                <% end %>
-              </div>
-              <div class="anounce-details">
-                <h3 class="anounce-title"><%= anounce.title %></h3>
-                <p class="anounce-price"><%= number_to_currency(anounce.price) %></p>
-                <div class="anounce-meta">
-                  <span class="anounce-location"><%= anounce.city.name if anounce.city %></span>
-                  <span class="anounce-date"><%= time_ago_in_words(anounce.created_at) %> ago</span>
+    <% if params[:search].present? || params[:category_id].present? || params[:city_id].present? || params[:min_price].present? || params[:max_price].present? %>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Search Results</h2>
+        <div class="sort-options">
+          <%= form_with url: anounces_path, method: :get, class: "d-flex align-items-center" do |f| %>
+            <%= f.hidden_field :search, value: params[:search] %>
+            <%= f.hidden_field :category_id, value: params[:category_id] %>
+            <%= f.hidden_field :city_id, value: params[:city_id] %>
+            <%= f.hidden_field :min_price, value: params[:min_price] %>
+            <%= f.hidden_field :max_price, value: params[:max_price] %>
+            <%= f.label :sort, "Sort by:", class: "me-2" %>
+            <%= f.select :sort, [["Newest", "newest"], ["Price: Low to High", "price_asc"], ["Price: High to Low", "price_desc"]], 
+                        { selected: params[:sort] || "newest" }, 
+                        { onchange: "this.form.submit()", class: "form-select" } %>
+          <% end %>
+        </div>
+      </div>
+      
+      <% if @anounces.any? %>
+        <div class="anounces-grid">
+          <% @anounces.each do |anounce| %>
+            <div class="anounce-card">
+              <%= link_to anounce_path(anounce), class: "anounce-link" do %>
+                <div class="anounce-image">
+                  <% if anounce.images.attached? %>
+                    <%= image_tag anounce.images.first, class: "img-fluid" %>
+                  <% else %>
+                    <div class="no-image">No Image</div>
+                  <% end %>
                 </div>
+                <div class="anounce-details">
+                  <h3 class="anounce-title"><%= anounce.title %></h3>
+                  <p class="anounce-price"><%= number_to_currency(anounce.price) %></p>
+                  <div class="anounce-meta">
+                    <span class="anounce-location"><%= anounce.city.name if anounce.city %></span>
+                    <span class="anounce-date"><%= time_ago_in_words(anounce.created_at) %> ago</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div class="pagination-container mt-4">
+          <%= paginate @anounces %>
+        </div>
+      <% else %>
+        <div class="no-anounces">
+          <div class="empty-state">
+            <i class="fa fa-search fa-4x"></i>
+            <h3>No announcements found</h3>
+            <p>Try adjusting your search criteria</p>
+            <%= link_to "Clear Filters", anounces_path, class: "btn btn-outline-primary" %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Display announcements by categories -->
+      <% Category.all.each do |category| %>
+        <% category_anounces = @anounces_by_category[category.id] %>
+        <% if category_anounces.present? %>
+          <div class="category-section mb-5" id="category-<%= category.id %>">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2><%= category.name %></h2>
+              <%= link_to "View All", anounces_path(category_id: category.id), class: "btn btn-outline-primary btn-sm" %>
+            </div>
+            
+            <div class="anounces-grid">
+              <% category_anounces.each do |anounce| %>
+                <div class="anounce-card">
+                  <%= link_to anounce_path(anounce), class: "anounce-link" do %>
+                    <div class="anounce-image">
+                      <% if anounce.images.attached? %>
+                        <%= image_tag anounce.images.first, class: "img-fluid" %>
+                      <% else %>
+                        <div class="no-image">No Image</div>
+                      <% end %>
+                    </div>
+                    <div class="anounce-details">
+                      <h3 class="anounce-title"><%= anounce.title %></h3>
+                      <p class="anounce-price"><%= number_to_currency(anounce.price) %></p>
+                      <div class="anounce-meta">
+                        <span class="anounce-location"><%= anounce.city.name if anounce.city %></span>
+                        <span class="anounce-date"><%= time_ago_in_words(anounce.created_at) %> ago</span>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            
+            <% if category_anounces.count > 8 %>
+              <div class="text-center mt-3">
+                <%= link_to "View All #{category.name}", anounces_path(category_id: category.id), class: "btn btn-outline-primary" %>
               </div>
             <% end %>
           </div>
         <% end %>
-      </div>
-    <% else %>
-      <div class="no-anounces">
-        <div class="empty-state">
-          <i class="fa fa-search fa-4x"></i>
-          <h3>No announcements found</h3>
-          <p>Be the first to post an announcement!</p>
-          <%= link_to "Post an Announcement", new_anounce_path, class: "btn btn-primary" %>
+      <% end %>
+      
+      <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+        <h2>Latest Announcements</h2>
+        <div class="sort-options">
+          <%= form_with url: anounces_path, method: :get, class: "d-flex align-items-center" do |f| %>
+            <%= f.label :sort, "Sort by:", class: "me-2" %>
+            <%= f.select :sort, [["Newest", "newest"], ["Price: Low to High", "price_asc"], ["Price: High to Low", "price_desc"]], 
+                        { selected: params[:sort] || "newest" }, 
+                        { onchange: "this.form.submit()", class: "form-select" } %>
+          <% end %>
         </div>
       </div>
+      
+      <% if @anounces.any? %>
+        <div class="anounces-grid">
+          <% @anounces.each do |anounce| %>
+            <div class="anounce-card">
+              <%= link_to anounce_path(anounce), class: "anounce-link" do %>
+                <div class="anounce-image">
+                  <% if anounce.images.attached? %>
+                    <%= image_tag anounce.images.first, class: "img-fluid" %>
+                  <% else %>
+                    <div class="no-image">No Image</div>
+                  <% end %>
+                </div>
+                <div class="anounce-details">
+                  <h3 class="anounce-title"><%= anounce.title %></h3>
+                  <p class="anounce-price"><%= number_to_currency(anounce.price) %></p>
+                  <div class="anounce-meta">
+                    <span class="anounce-location"><%= anounce.city.name if anounce.city %></span>
+                    <span class="anounce-date"><%= time_ago_in_words(anounce.created_at) %> ago</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <div class="pagination-container mt-4">
+          <%= paginate @anounces %>
+        </div>
+      <% else %>
+        <div class="no-anounces">
+          <div class="empty-state">
+            <i class="fa fa-search fa-4x"></i>
+            <h3>No announcements found</h3>
+            <p>Be the first to post an announcement!</p>
+            <%= link_to "Post an Announcement", new_anounce_path, class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>

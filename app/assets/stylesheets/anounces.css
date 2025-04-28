@@ -516,3 +516,131 @@ body {
     text-align: center;
     margin-top: 20px;
 }
+
+
+/* Styles existants... */
+
+/* Styles pour les photos */
+.anounce-photos {
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.5rem;
+}
+
+.photo-item {
+    position: relative;
+    padding-bottom: 100%;
+    /* Ratio carré */
+    overflow: hidden;
+    border-radius: 0.25rem;
+}
+
+.photo-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.photo-item:hover img {
+    transform: scale(1.05);
+}
+
+.photo-single {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 0.25rem;
+}
+
+.photo-single img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    background-color: #e5e7eb;
+    border-radius: 0.25rem;
+    color: #6b7280;
+}
+
+.no-photo-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.no-photo-text {
+    font-size: 0.875rem;
+}
+
+/* Media queries pour les photos */
+@media (max-width: 640px) {
+    .photos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .photo-single {
+        height: 200px;
+    }
+}
+
+/* Add this to your CSS file */
+.category-section {
+    margin-bottom: 40px;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a,
+.pagination span {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.pagination .active a {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #f5f5f5;
+}
+
+.pagination .disabled span {
+    color: #ccc;
+    cursor: not-allowed;
+}

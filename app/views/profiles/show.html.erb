@@ -1,0 +1,38 @@
+<div class="profile-container">
+  <% if flash[:notice] %>
+    <div class="flash flash-success">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+  
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <%= @user.name[0].upcase %>
+      </div>
+      <h1 class="profile-title"><%= @user.name %></h1>
+      <p class="profile-subtitle">Membre depuis <%= @user.created_at.strftime("%B %Y") %></p>
+    </div>
+    
+    <div class="profile-content">
+      <div class="profile-section">
+        <span class="profile-label">Nom</span>
+        <div class="profile-value"><%= @user.name %></div>
+      </div>
+      
+      <div class="profile-section">
+        <span class="profile-label">Email</span>
+        <div class="profile-value"><%= @user.email %></div>
+      </div>
+      
+      <div class="profile-section">
+        <span class="profile-label">Numéro de téléphone</span>
+        <div class="profile-value"><%= @user.phone %></div>
+      </div>
+    </div>
+    
+    <div class="profile-actions">
+      <%= link_to "Modifier le profil", edit_profile_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+</div>

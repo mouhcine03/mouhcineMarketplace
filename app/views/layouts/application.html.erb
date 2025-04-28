@@ -32,8 +32,8 @@
                   <span>Mon compte</span>
                 </a>
                 <div class="dropdown-menu">
-                  <%= link_to "Mon profil", "#", class: "dropdown-item" %>
-                  <%= link_to "Mes annonces", "#", class: "dropdown-item" %>
+                  <%= link_to "Mon profil", profile_path , class: "dropdown-item" %>
+                  <%= link_to "Mes annonces", mes_anounces_path , class: "dropdown-item" %>
                   <%= link_to "Messages", "#", class: "dropdown-item" %>
                   <%= link_to "Déconnexion", destroy_user_session_path, method: :delete , class: "dropdown-item" %>
                 </div>
@@ -48,18 +48,21 @@
           </div>
         </div>
         
-        <nav class="main-nav">
-          <ul class="category-menu">
-            <li><a href="#"><i class="fas fa-car"></i> Véhicules</a></li>
-            <li><a href="#"><i class="fas fa-home"></i> Immobilier</a></li>
-            <li><a href="#"><i class="fas fa-briefcase"></i> Emploi</a></li>
-            <li><a href="#"><i class="fas fa-couch"></i> Meubles</a></li>
-            <li><a href="#"><i class="fas fa-mobile-alt"></i> Téléphones</a></li>
-            <li><a href="#"><i class="fas fa-laptop"></i> Informatique</a></li>
-            <li><a href="#"><i class="fas fa-tshirt"></i> Mode</a></li>
-            <li><a href="#"><i class="fas fa-ellipsis-h"></i> Autres</a></li>
-          </ul>
-        </nav>
+  
+
+<nav class="main-nav">
+  <ul class="category-menu">
+    <% Category.all.each do |category| %>
+      <li>
+        <%= link_to anounces_path(category_id: category.id) do %>
+        
+          <i class="<%= icon_class_for(category.name) %>"></i> <%= category.name %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</nav>
+
       </div>
     </header>
 

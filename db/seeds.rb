@@ -18,10 +18,8 @@ categories = [
   "Emploi",
   "Multimédia",
   "Maison & Jardin",
-  "Loisirs",
-  "Mode & Beauté",
+  "Beauté",
   "Services",
-  "Animaux",
   "Autres"
 ]
 
