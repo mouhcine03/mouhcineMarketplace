@@ -40,7 +40,7 @@
           </div>
           <div class="meta-item">
             <i class="fa fa-calendar"></i>
-            <span>Posted <%= time_ago_in_words(@anounce.created_at) %> ago</span>
+            <span>Poster <%= time_ago_in_words(@anounce.created_at) %> </span>
           </div>
           <div class="meta-item">
             <i class="fa fa-tag"></i>
@@ -85,7 +85,7 @@
     
     <% if @related_anounces.any? %>
       <div class="related-anounces">
-        <h3>Similar Announcements</h3>
+        <h3>Annonces similaires</h3>
         <div class="related-anounces-grid">
           <% @related_anounces.each do |anounce| %>
             <div class="anounce-card">
@@ -94,7 +94,7 @@
                   <% if anounce.images.attached? %>
                     <%= image_tag anounce.images.first, class: "img-fluid" %>
                   <% else %>
-                    <div class="no-image">No Image</div>
+                     <%= image_tag "placeholder.jpeg", class: "img-fluid" %>
                   <% end %>
                 </div>
                 <div class="anounce-details">
@@ -102,7 +102,7 @@
                   <p class="anounce-price"><%= number_to_currency(anounce.price) %></p>
                   <div class="anounce-meta">
                     <span class="anounce-location"><%= anounce.city.name if anounce.city %></span>
-                    <span class="anounce-date"><%= time_ago_in_words(anounce.created_at) %> ago</span>
+                    <span class="anounce-date">Poster <%= time_ago_in_words(anounce.created_at) %> </span>
                   </div>
                 </div>
               <% end %>

@@ -10,7 +10,8 @@ class AnouncesController < ApplicationController
   @anounces = Anounce.all
   
   # Apply filters if present
-  @anounces = @anounces.where("title ILIKE ? OR description ILIKE ?", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
+ @anounces = @anounces.where("LOWER(title) LIKE ? OR LOWER(description) LIKE ?", "%#{params[:search].downcase}%", "%#{params[:search].downcase}%") if params[:search].present?
+
   @anounces = @anounces.where(category_id: params[:category_id]) if params[:category_id].present?
   @anounces = @anounces.where(city_id: params[:city_id]) if params[:city_id].present?
   @anounces = @anounces.where("price >= ?", params[:min_price]) if params[:min_price].present?

@@ -1,78 +1,18 @@
-# db/seeds.rb
 
-puts "📦 Suppression de toutes les données existantes..."
+require 'faker' # pour générer de fausses données automatiquement
 
-# Supprimer toutes les données des tables concernées
-Anounce.destroy_all if defined?(Anounce)
-Category.destroy_all if defined?(Category)
-City.destroy_all if defined?(City)
+cities = City.all
+categories = Category.all
 
-puts "✅ Données supprimées."
-
-# Création de catégories
-puts "📁 Création des catégories..."
-
-categories = [
-  "Véhicules",
-  "Immobilier",
-  "Emploi",
-  "Multimédia",
-  "Maison & Jardin",
-  "Beauté",
-  "Services",
-  "Autres"
-]
-
-categories.each do |name|
-  Category.create!(name: name)
+100.times do
+  Anounce.create!(
+    title: Faker::Commerce.product_name,
+    description: Faker::Lorem.paragraph(sentence_count: 5),
+    price: Faker::Commerce.price(range: 10..500),
+    city: cities.sample,           # prend une ville existante aléatoire
+    category: categories.sample,   # prend une catégorie existante aléatoire
+    user_id: User.first.id          # ou adapte en fonction de ta logique d'utilisateur
+  )
 end
 
-puts "✅ Catégories créées."
-
-# Création des villes marocaines
-puts "🏙️ Création des villes marocaines..."
-
-cities = [
-  "Casablanca",
-  "Rabat",
-  "Fès",
-  "Marrakech",
-  "Tanger",
-  "Agadir",
-  "Meknès",
-  "Oujda",
-  "El Jadida",
-  "Tétouan",
-  "Safi",
-  "Khouribga",
-  "Béni Mellal",
-  "Nador",
-  "Taza",
-  "Mohammedia",
-  "Kénitra",
-  "Settat",
-  "Berrechid",
-  "Ksar El Kebir",
-  "Larache",
-  "Guelmim",
-  "Errachidia",
-  "Ouarzazate",
-  "Dakhla",
-  "Laâyoune",
-  "Taroudant",
-  "Essaouira",
-  "Al Hoceima",
-  "Ifrane",
-  "Azrou",
-  "Taourirt",
-  "Midelt",
-  "Zagora"
-]
-
-cities.each do |name|
-  City.create!(name: name)
-end
-
-puts "✅ Villes marocaines ajoutées avec succès."
-
-puts "🌱 Seed terminé avec succès !"
+puts "✅ 10 annonces créées !"

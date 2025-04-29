@@ -1,28 +1,27 @@
-
 <div class="auth-container">
   <div class="auth-card">
-    <h2 class="auth-title">Sign In</h2>
+    <h2 class="auth-title">Connexion</h2>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
       <div class="form-field">
-        <%= f.label :email, class: "form-label" %>
+        <%= f.label :email, "Adresse e-mail", class: "form-label" %>
         <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-input" %>
       </div>
 
       <div class="form-field">
-        <%= f.label :password, class: "form-label" %>
+        <%= f.label :password, "Mot de passe", class: "form-label" %>
         <%= f.password_field :password, autocomplete: "current-password", class: "form-input" %>
       </div>
 
       <% if devise_mapping.rememberable? %>
         <div class="form-field checkbox-field">
           <%= f.check_box :remember_me, class: "form-checkbox" %>
-          <%= f.label :remember_me, class: "checkbox-label" %>
+          <%= f.label :remember_me, "Se souvenir de moi", class: "checkbox-label" %>
         </div>
       <% end %>
 
       <div class="form-actions">
-        <%= f.submit "Sign in", class: "btn btn-primary" %>
+        <%= f.submit "Se connecter", class: "btn btn-primary" %>
       </div>
     <% end %>
 

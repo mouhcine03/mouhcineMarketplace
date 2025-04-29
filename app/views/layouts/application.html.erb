@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for?(:title) ? yield(:title) : "Votre Marketplace" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "MH Marketplace" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -18,7 +18,7 @@
         <div class="header-top">
           <div class="logo">
             <%= link_to root_path do %>
-              <h1>Votre<span>Marketplace</span></h1>
+              <h1>MH<span>Marketplace</span></h1>
             <% end %>
           </div>
           
@@ -135,7 +135,7 @@
         </div>
         
         <div class="footer-bottom">
-          <p>&copy; <%= Date.today.year %> VotreMarketplace. Tous droits réservés.</p>
+          <p>&copy; <%= Date.today.year %> MH Marketplace. Tous droits réservés.</p>
         </div>
       </div>
     </footer>
